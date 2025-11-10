@@ -14,8 +14,18 @@ prela(c,a).
 prela(c,d).
 prela(d,b).
 
+camino_dfs(A, B) :-
+    camino_visit(A, B, [A]).
+camino_visit(A, B, _) :-
+    prela(A, B).
+
+camino_visit(A, B, Visitados) :-
+    prela(A,C),
+    not(member(C, Visitados)),
+    camino_visit(C, B, [C | Visitados]).
+
 prelacion_directa(A,B):-
     prela(A,B).
 
 prelacion_total(A,B):-
-    (prelacion_directa(A,B); (prelacion_directa(A,C), prelacion_total(C,B))).
+    (prelacion_directa(A,B); (prelacion_directa(A,C), camino_dfs(C,B))).
